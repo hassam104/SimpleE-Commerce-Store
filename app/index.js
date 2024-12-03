@@ -20,7 +20,7 @@ export default function Index() {
     <View style={{ marginTop: 175 }}>
       <Text
         style={{
-          marginLeft: 140,
+          marginLeft: 145,
           fontSize: 25,
           marginBottom: 35,
         }}

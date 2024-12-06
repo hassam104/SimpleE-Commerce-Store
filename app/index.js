@@ -1,35 +1,55 @@
-import { View, Button, Text } from "react-native";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { View, Text, ScrollView } from "react-native";
 
-export default function Index() {
-  const [count, setCount] = useState(0);
+const App = () => {
+  const [blogs, setBlogs] = useState([]); // State to store blog posts
 
-  const increment = () => {
-    setCount(count + 1);
-  };
-
-  const decrement = () => {
-    setCount(count - 1);
-  };
-
-  const reset = () => {
-    setCount(0);
-  };
+  // Fetch data from blogs.json when the app loads
+  useEffect(() => {
+    fetch("/blogs.json")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => setBlogs(data)) // Update state with fetched data
+      .catch((error) => console.error("Error fetching blogs:", error));
+  });
 
   return (
-    <View style={{ marginTop: 175 }}>
-      <Text
-        style={{
-          marginLeft: 145,
-          fontSize: 25,
-          marginBottom: 35,
-        }}
-      >
-        Count: {count}
+    <ScrollView>
+      <Text style={{ textAlign: "center", fontSize: "40px" }}>
+        Latest Blogs
       </Text>
-      <Button onPress={increment} title="increment" color="blue" />
-      <Button onPress={decrement} title="decrement" color="red" />
-      <Button onPress={reset} title="reset" color="green" />
-    </View>
+      <View>
+        {blogs.map((blog) => (
+          <View key={blog.id} style={{ marginBottom: "-30px" }}>
+            <Text
+              style={{
+                textAlign: "center",
+                fontFamily: "fantasy",
+                fontSize: "15px",
+              }}
+            >
+              {blog.title}
+            </Text>
+            <img
+              style={{
+                marginLeft: "450px",
+                width: "30%",
+                height: "50%",
+                borderRadius: "10px",
+              }}
+              src={blog.image}
+            />
+            <View>{blog.description}</View>
+            <View style={{ fontSize: "20px" }}>Write By:{blog.author}</View>
+          </View>
+        ))}
+      </View>
+    </ScrollView>
   );
-}
+};
+
+export default App;

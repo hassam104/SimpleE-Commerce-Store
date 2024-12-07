@@ -37,8 +37,8 @@ const App = () => {
             <img
               style={{
                 marginLeft: "450px",
-                width: "30%",
-                height: "50%",
+                width: "50%",
+                height: "60%",
                 borderRadius: "10px",
               }}
               src={blog.image}

@@ -1,55 +1,74 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, ScrollView } from "react-native";
+import { View, Text, StyleSheet, Image, ImageBackground } from "react-native";
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]); // State to store blog posts
+  const [weatherData, setWeatherData] = useState([]);
 
-  // Fetch data from blogs.json when the app loads
   useEffect(() => {
-    fetch("/blogs.json")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => setBlogs(data)) // Update state with fetched data
-      .catch((error) => console.error("Error fetching blogs:", error));
-  });
+    const fetchData = async () => {
+      const response = await fetch("./Weather data.json");
+      const data = await response.json();
+      setWeatherData(data.cities);
+    };
+
+    fetchData();
+  }, []);
 
   return (
-    <ScrollView>
-      <Text style={{ textAlign: "center", fontSize: "40px" }}>
-        Latest Blogs
-      </Text>
-      <View>
-        {blogs.map((blog) => (
-          <View key={blog.id} style={{ marginBottom: "-30px" }}>
-            <Text
-              style={{
-                textAlign: "center",
-                fontFamily: "fantasy",
-                fontSize: "15px",
+    <ImageBackground
+      source={{ uri: "./Images/colorbackground.jpg" }}
+      style={styles.backgroundImage}
+    >
+      <View style={styles.container}>
+        {weatherData.map((city, index) => (
+          <View key={index}>
+            <Text style={styles.city}>{city.name}</Text>
+            <Text style={styles.temp}>{city.temperature}°F</Text>
+            <Image
+              style={styles.icon}
+              source={{
+                uri: "./Images/clouds.jpg",
               }}
-            >
-              {blog.title}
-            </Text>
-            <img
-              style={{
-                marginLeft: "450px",
-                width: "50%",
-                height: "60%",
-                borderRadius: "10px",
-              }}
-              src={blog.image}
             />
-            <View>{blog.description}</View>
-            <View style={{ fontSize: "20px" }}>Write By:{blog.author}</View>
+            <Text style={styles.description}>{city.condition}</Text>
           </View>
         ))}
       </View>
-    </ScrollView>
+    </ImageBackground>
   );
 };
+const styles = StyleSheet.create({
+  backgroundImage: {
+    flex: 1,
+    resizeMode: "cover", // Adjust resizeMode as needed (cover, contain, stretch)
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  container: {
+    flex: 1,
+    backgroundColor: "#f2f2f2",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#E3DAC9",
+  },
+  city: {
+    fontSize: 24,
+    fontWeight: "bold",
 
+    marginBottom: 10,
+  },
+  temp: {
+    fontSize: 48,
+    fontWeight: "bold",
+  },
+  icon: {
+    width: 100,
+    height: 100,
+    marginBottom: 20,
+  },
+  description: {
+    fontSize: 18,
+    textAlign: "center",
+  },
+});
 export default App;
